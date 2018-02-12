@@ -24,7 +24,12 @@ NucleusPtr create_nucleus(const VarMap& var_map, std::size_t index) {
   const auto& species = var_map["projectile"]
                         .as<std::vector<std::string>>().at(index);
   const auto& nucleon_dmin = var_map["nucleon-min-dist"].as<double>();
-  return Nucleus::create(species, nucleon_dmin);
+
+  const auto& correct_woods_saxon = var_map["correct-woods-saxon"].as<bool>();
+  auto nucleon_width = var_map["nucleon-width"].as<double>();
+  if (!correct_woods_saxon) nucleon_width = 0;
+
+  return Nucleus::create(species, nucleon_width, nucleon_dmin);
 }
 
 // Determine the maximum impact parameter.  If the configuration contains a
